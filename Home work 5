@@ -1,1 +1,13 @@
+from datetime import datetime
 
+moscow_times_date = 'Wednesday, October 2, 2002'
+moscow_times_datetime = datetime.strptime(moscow_times_date, '%A, %B %d, %Y')
+print(moscow_times_datetime)
+
+guardian_date = 'Friday, 11.10.13'
+guardian_datetime = datetime.strptime(guardian_date, '%A, %d.%m.%y')
+print(guardian_datetime)
+
+daily_news_date = 'Thursday, 18 August 1977'
+daily_news_datetime = datetime.strptime(daily_news_date, '%A, %d %B %Y')
+print(daily_news_datetime)

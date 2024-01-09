@@ -1,0 +1,24 @@
+import pandas as pd
+
+
+df = pd.read_csv('web_clients_correct.csv')
+
+
+for index, row in df.iterrows():
+    name = row['name']
+    sex = 'женского' if row['sex'] == 'female' else 'мужского'
+    age = int(row['age'])
+    device_type = 'мобильного' if row['device_type'] == 'mobile' else 'планшетного' if row['device_type'] == 'tablet' else 'Ноутбука' if row['device_type'] == 'laptop' else 'Компьютера'
+    browser = row['browser']
+    bill = int(row['bill'])
+    region = row['region']
+
+    
+    if row['sex'] == 'female':
+        description = f"Пользователь {name} {sex} пола, {age} лет совершила покупку на {bill} у.е. с {device_type} браузера {browser}. Регион, из которого совершалась покупка: {region}."
+    else:
+        description = f"Пользователь {name} {sex} пола, {age} лет совершил покупку на {bill} у.е. с {device_type} браузера {browser}. Регион, из которого совершалась покупка: {region}."
+
+    
+    with open('output.txt', 'a') as file:
+        file.write(description + '\n')

@@ -1,0 +1,46 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+def generate_signal(frequency, time):
+    period = 1.0 / frequency
+    signal = 4.5 * (time % period < period / 2) + 0.5 * (time % period >= period / 2)
+    return signal
+
+def model_input_voltage(signal, T, h):
+    U = np.zeros(len(signal))
+    for n in range(1, len(signal)):
+        U[n] = U[n-1] + h * (signal[n-1] - U[n-1]) / T
+    return U
+
+def add_noise(signal, amplitude):
+    noise = np.random.uniform(-amplitude, amplitude, len(signal))
+    return signal + noise
+
+def plot_signals(time, signals, labels, title):
+    plt.figure(figsize=(10, 6))
+    for signal, label in zip(signals, labels):
+        plt.plot(time, signal, label=label)
+    plt.grid(True)
+    plt.title(title)
+    plt.xlabel('Time (s)')
+    plt.ylabel('Voltage (V)')
+    plt.legend()
+    plt.show()
+
+# Параметры
+fs = [5e3, 10e3]  # частоты в Hz
+ts = 1e-3  # время моделированиясь секунд
+h = 1e-6  # шаг по времени
+T_values = [1e-5, 2e-5]  # постоянные времени
+amplitudes = [0.1, 0.3]  # амплитуды помех
+
+time = np.arange(0, ts, h)
+
+# Генерация сигналов и моделирование
+for f in fs:
+    signal = generate_signal(f, time)
+    for T, amplitude in zip(T_values, amplitudes):
+        U = model_input_voltage(signal, T, h)
+        noisy_U = add_noise(U, amplitude)
+        
+        plot_signals(time, [signal, U, noisy_U], ['Исходный сигнал', 'Напряжение на входе', 'Напряжение с помехами'], f'Сигнал с частотой {f/1e3} kHz, T={T}, Амплитуда помех={amplitude}')
